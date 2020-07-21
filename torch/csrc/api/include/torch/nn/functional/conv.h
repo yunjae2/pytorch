@@ -64,6 +64,7 @@ inline Tensor conv2d(
     ExpandingArray<2> padding,
     ExpandingArray<2> dilation,
     int64_t groups) {
+  std::cout << __func__ << " in " << __FILE__ << ":" << __LINE__ << std::endl;
   return torch::conv2d(
     input,
     weight,
@@ -91,6 +92,7 @@ inline Tensor conv2d(
     const Tensor& input,
     const Tensor& weight,
     const Conv2dFuncOptions& options = {}) {
+  std::cout << __func__ << " in " << __FILE__ << ":" << __LINE__ << std::endl;
   return detail::conv2d(
     input,
     weight,

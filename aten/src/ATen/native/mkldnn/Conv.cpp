@@ -87,6 +87,7 @@ ideep::tensor _mkldnn_conv2d(
 
   ideep::tensor y;
   if (b.has_value()) {
+  std::cout << __func__ << " in " << __FILE__ << ":" << __LINE__ << std::endl;
     ideep::convolution_forward::compute<AllocForMKLDNN>(
         x,
         w,
@@ -102,6 +103,7 @@ ideep::tensor _mkldnn_conv2d(
         ideep::algorithm::convolution_direct,
         ideep::prop_kind::forward);
   } else {
+  std::cout << __func__ << " in " << __FILE__ << ":" << __LINE__ << std::endl;
     ideep::convolution_forward::compute<AllocForMKLDNN>(
       x,
       w,
@@ -133,6 +135,7 @@ at::Tensor mkldnn_convolution(
   if (bias.defined()) {
     mkldnn_bias = get_mkldnn_tensor(bias);
   }
+  std::cout << __func__ << " in " << __FILE__ << ":" << __LINE__ << std::endl;
 
   ideep::tensor mkldnn_output = _mkldnn_conv2d(
       mkldnn_input,

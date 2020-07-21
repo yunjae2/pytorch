@@ -13,6 +13,7 @@ PyMODINIT_FUNC init_C(void)
 #else
 PyMODINIT_FUNC PyInit__C(void)
 {
+	printf("MAP: PyTorch init!\n");
   return initModule();
 }
 #endif
