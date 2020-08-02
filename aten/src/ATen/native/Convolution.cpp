@@ -4,6 +4,7 @@
 #include <ATen/native/cpu/DepthwiseConvKernel.h>
 #include <ATen/native/utils/ParamUtils.h>
 #include <ATen/native/ConvUtils.h>
+#include <include/rangetools.h>
 
 #include <ATen/Config.h>
 #if AT_NNPACK_ENABLED()
@@ -559,6 +560,13 @@ at::Tensor _convolution(
     bool transposed_, IntArrayRef output_padding_, int64_t groups_,
     bool benchmark, bool deterministic, bool cudnn_enabled) {
 
+	new_ranges();
+	add_range(INPUT_RANGE, input_r.data_ptr(), input_r.nbytes());
+	add_range(WEIGHT_RANGE, weight_r.data_ptr(), weight_r.nbytes());
+	if (bias_r.defined())
+		add_range(BIAS_RANGE, bias_r.data_ptr(), bias_r.nbytes());
+	print_ranges();
+
   const bool input_is_mkldnn = input_r.is_mkldnn();
   auto input = input_r;
   auto weight = weight_r;
@@ -577,7 +585,7 @@ at::Tensor _convolution(
     weight_sizes = c10::IntArrayRef(weight_sizes_mkl);
   }
   int64_t dim = k - 2;
-  
+
 
   TORCH_CHECK(dim > 0, "weight should have at least three dimensions");
 
@@ -594,7 +602,7 @@ at::Tensor _convolution(
 
   check_shape_forward(input, weight_sizes, bias, params, input_is_mkldnn);
 
-  if (input.size(0) == 0) {    
+  if (input.size(0) == 0) {
     // don't send empty inputs through backends
     // but need to compute correct output size first and set up history for params
     std::vector<int64_t> o;
