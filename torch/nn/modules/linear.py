@@ -84,6 +84,7 @@ class Linear(Module):
             init.uniform_(self.bias, -bound, bound)
 
     def forward(self, input):
+        torch.nn.modules.utils.log_ranges(self, input, self.weight, self.bias)
         return F.linear(input, self.weight, self.bias)
 
     def extra_repr(self):
