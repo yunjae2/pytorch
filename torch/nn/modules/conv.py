@@ -350,6 +350,7 @@ class Conv2d(_ConvNd):
                         self.padding, self.dilation, self.groups)
 
     def forward(self, input):
+        torch.nn.modules.utils.log_ranges(self, input, self.weight, self.bias)
         return self._conv_forward(input, self.weight)
 
 class Conv3d(_ConvNd):

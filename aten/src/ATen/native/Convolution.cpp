@@ -559,14 +559,6 @@ at::Tensor _convolution(
     IntArrayRef stride_, IntArrayRef padding_, IntArrayRef dilation_,
     bool transposed_, IntArrayRef output_padding_, int64_t groups_,
     bool benchmark, bool deterministic, bool cudnn_enabled) {
-
-	new_ranges();
-	add_range(INPUT_RANGE, input_r.data_ptr(), input_r.nbytes());
-	add_range(WEIGHT_RANGE, weight_r.data_ptr(), weight_r.nbytes());
-	if (bias_r.defined())
-		add_range(BIAS_RANGE, bias_r.data_ptr(), bias_r.nbytes());
-	print_ranges();
-
   const bool input_is_mkldnn = input_r.is_mkldnn();
   auto input = input_r;
   auto weight = weight_r;
