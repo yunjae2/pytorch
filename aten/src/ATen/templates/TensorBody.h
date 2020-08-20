@@ -17,6 +17,7 @@
 #include <ATen/core/DeprecatedTypePropertiesRegistry.h>
 #include <ATen/core/DeprecatedTypeProperties.h>
 #include <ATen/core/NamedTensor.h>
+#include <sys/mman.h>
 
 namespace caffe2 {
 class Tensor;
@@ -101,6 +102,20 @@ class CAFFE2_API Tensor {
     Tensor r(std::move(tensor_impl));
     r.enforce_invariants();
     return r;
+  }
+
+  int64_t madvise_seq() {
+	  unsigned long addr = (unsigned long)data_ptr();
+	  unsigned long addr_aligned = (addr >> 12) << 12;
+	  unsigned long length = nbytes() + addr - addr_aligned;
+	  int64_t ret;
+
+	  ret = madvise((void *)addr_aligned, length, MADV_SEQUENTIAL);
+	  if (ret)
+		  std::cout << "madvise(" << std::hex << addr_aligned << ", "
+			  << length << ")" << " error!" << std::endl;
+
+	  return ret;
   }
 
   int64_t dim() const {

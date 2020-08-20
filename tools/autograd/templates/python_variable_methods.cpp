@@ -165,6 +165,14 @@ static PyObject * THPVariable_storage_offset(PyObject* self_, PyObject* args)
   END_HANDLE_TH_ERRORS
 }
 
+static PyObject * THPVariable_madvise_seq(PyObject* self, PyObject* args)
+{
+   HANDLE_TH_ERRORS
+   auto& self_ = reinterpret_cast<THPVariable*>(self)->cdata;
+   return THPUtils_packInt64(self_.madvise_seq());
+   END_HANDLE_TH_ERRORS
+}
+
 // implemented on the python object to avoid dispatch overhead
 static PyObject * THPVariable_dim(PyObject* self, PyObject* args)
 {
@@ -874,6 +882,7 @@ PyMethodDef variable_methods[] = {
   {"cpu", (PyCFunction)(void(*)(void))THPVariable_cpu, METH_VARARGS | METH_KEYWORDS, NULL},
   {"cuda", (PyCFunction)(void(*)(void))THPVariable_cuda, METH_VARARGS | METH_KEYWORDS, NULL},
   {"data_ptr", (PyCFunction)THPVariable_data_ptr, METH_NOARGS, NULL},
+  {"madvise_seq", (PyCFunction)THPVariable_madvise_seq, METH_NOARGS, NULL},
   {"dim", (PyCFunction)THPVariable_dim, METH_NOARGS, NULL},
   {"has_names", (PyCFunction)THPVariable_has_names, METH_NOARGS, NULL},
   {"double", (PyCFunction)(void(*)(void))THPVariable_double, METH_VARARGS | METH_KEYWORDS, NULL},
